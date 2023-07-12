@@ -6,9 +6,78 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Lotto</title>
+    <style>
+        * {
+            font-family: sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .box {
+            max-width: 700px;
+            margin: auto;
+        }
+
+        .input-group input {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid black;
+            background-color: gold;
+            text-align: center;
+            font-size: 24px;
+            padding: 20px;
+            font-weight: bold;
+        }
+
+        .lotto-form > div{
+            display: flex;
+            gap: 10px;
+        }
+
+        button[type='submit']{
+            border: 2px solid black;
+            background-color: lightskyblue;
+            color: black;
+            padding: 10px 30px;
+            margin: 20px auto;
+            font-size: 36px;
+            text-transform: uppercase;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 800ms;
+        }
+
+        button[type='submit']:hover {
+            background-color: black;
+            color: lightskyblue;
+        }
+
+    </style>
     <script src="./src/scripts/app.js" async defer></script>
 </head>
 <body>
 
+<div class="box">
+    <h1>Lotto</h1>
+
+    <div>
+        <form action="" class="lotto-form">
+            <div>
+                <div class="input-group"><label for="digit1">1.</label><input type="text" id="digit1"></div>
+                <div class="input-group"><label for="digit2">2.</label><input type="text" id="digit2"></div>
+                <div class="input-group"><label for="digit3">3.</label><input type="text" id="digit3"></div>
+                <div class="input-group"><label for="digit4">4.</label><input type="text" id="digit4"></div>
+                <div class="input-group"><label for="digit5">5.</label><input type="text" id="digit5"></div>
+                <div class="input-group"><label for="digit6">6.</label><input type="text" id="digit6"></div>
+            </div>
+            <button type="submit">Play</button>
+        </form>
+        <div id="results"></div>
+    </div>
+</div>
 </body>
 </html>
