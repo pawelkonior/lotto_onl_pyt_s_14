@@ -3,7 +3,9 @@ const inputRefs = [...document.querySelectorAll('form.lotto-form input[id^="digi
 const resultRef = document.getElementById('results');
 
 
-const isNotEmpty = (elements) => elements.every((element) => element.value !== '');
+const isNotEmpties = (elements) => elements.every((element) => element.value !== '');
+const isNotEmpty = (element) => element.value !== '';
+
 const isIntegers = (elements) => elements
     .every((element) => Number.isInteger(Number(element.value)));
 
@@ -38,7 +40,7 @@ const checkHits = (userDigits, drawnDigits) => {
     return hits;
 }
 
-const calculatePrice = (quantity) => {
+const calculatePrize = (quantity) => {
     switch (quantity) {
         case 3:
             return 24;
@@ -57,19 +59,40 @@ const showResults = (hits, drawnDigits) => {
     let message = `Wylosowane liczby to: ${drawnDigits.join(', ')}.`
     if (hits.length > 0) {
         message += ` Trafiłeś ${hits.length} razy, twoje liczby to ${hits.join(', ')}.`
-        message += ` Hajs: ${calculatePrice(hits.length)}PLN`
-    }else {
+        message += ` Hajs: ${calculatePrize(hits.length)}PLN`
+    } else {
         message += 'Nic nie wygrałeś, spróbuj jeszcze raz, a na pewno wygrasz!'
     }
 
     resultRef.innerText = message;
 }
 
+inputRefs.forEach((input) => {
+    input.addEventListener('keyup', function(e) {
+        if (isNotEmpty(e.target)){
+            e.target.classList.remove('error')
+            console.log('remove')
+        }else {
+            e.target.classList.add('error')
+            console.log('add')
+        }
+    })
+})
+
+
+
+
+
+
+
+
+
+
 
 submitRef.addEventListener('click', (event) => {
     event.preventDefault();
 
-    if (isNotEmpty(inputRefs)) {
+    if (isNotEmpties(inputRefs)) {
         if (isIntegers(inputRefs)) {
             const userDigits = ConvertInputs(inputRefs);
             if (isNotRedundant(userDigits)) {
@@ -86,3 +109,29 @@ submitRef.addEventListener('click', (event) => {
         console.log('empty inputs');
     }
 })
+
+
+function becomeMillionaire(money, digits) {
+    const games = money / 3;
+    let prize = 0;
+    const count6 = [];
+
+    for (let i = 0; i < games; i++) {
+        let userDigits;
+        if (digits === undefined) {
+            userDigits = drawDigits();
+        } else {
+            userDigits = digits;
+        }
+
+        const drawnDigits = drawDigits();
+        const hits = checkHits(userDigits, drawnDigits);
+        prize += calculatePrize(hits.length)
+
+        if (hits.length === 6) {
+            count6.push(hits);
+        }
+    }
+
+    return `Wygrałeś ${prize}PLN, szóstki: ${count6.length}, trafione numery do szóstki: ${count6.join(', ')}`
+}
