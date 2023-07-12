@@ -9,6 +9,10 @@ const isNotEmpty = (element) => element.value !== '';
 const isIntegers = (elements) => elements
     .every((element) => Number.isInteger(Number(element.value)));
 
+const isInteger = (element) => Number.isInteger(Number(element.value));
+
+const isInRange = (element) => parseInt(element.value) > 0 && parseInt(element.value) <= 49;
+
 const ConvertInputs = (elements) => elements.map((element) => parseInt(element.value));
 
 const isNotRedundant = (digits) => new Set(digits).size === digits.length;
@@ -67,46 +71,60 @@ const showResults = (hits, drawnDigits) => {
     resultRef.innerText = message;
 }
 
+function createTooltip(messages) {
+    const node = document.createElement('div');
+    node.classList.add('tooltip');
+
+    for (const message of messages) {
+        const p = document.createElement('p');
+        const text = document.createTextNode(message);
+        p.appendChild(text);
+        node.appendChild(p);
+    }
+
+    return node;
+}
+
 inputRefs.forEach((input) => {
-    input.addEventListener('keyup', function(e) {
-        if (isNotEmpty(e.target)){
-            e.target.classList.remove('error')
-            console.log('remove')
-        }else {
-            e.target.classList.add('error')
-            console.log('add')
+    input.addEventListener('keyup', function (e) {
+        const messages = [];
+
+        if (!isNotEmpty(e.target)) {
+            messages.push('Pole nie może być puste!')
+        }
+
+        if (!isInteger(e.target)) {
+            messages.push('Podana wartość musi być liczbą');
+        } else if (!isInRange(e.target)) {
+            messages.push('Wartość musi być z zakresu 1-49, ziom');
+        }
+
+        const before = e.target.previousElementSibling;
+        if (before.classList.contains('tooltip')) {
+            before.remove();
+        }
+        e.target.classList.remove('error');
+
+
+        if (messages.length > 0) {
+            const div = createTooltip(messages);
+            e.target.before(div);
+            e.target.classList.add('error');
         }
     })
 })
 
 
-
-
-
-
-
-
-
-
-
 submitRef.addEventListener('click', (event) => {
     event.preventDefault();
 
-    if (isNotEmpties(inputRefs)) {
-        if (isIntegers(inputRefs)) {
-            const userDigits = ConvertInputs(inputRefs);
-            if (isNotRedundant(userDigits)) {
-                const drawnDigits = drawDigits();
-                const hits = checkHits(userDigits, drawnDigits);
-                showResults(hits, drawnDigits);
-            } else {
-                console.log('redundant');
-            }
-        } else {
-            console.log('no integers');
+    if (isNotEmpties(inputRefs) && isIntegers(inputRefs)) {
+        const userDigits = ConvertInputs(inputRefs);
+        if (isNotRedundant(userDigits)) {
+            const drawnDigits = drawDigits();
+            const hits = checkHits(userDigits, drawnDigits);
+            showResults(hits, drawnDigits);
         }
-    } else {
-        console.log('empty inputs');
     }
 })
 
